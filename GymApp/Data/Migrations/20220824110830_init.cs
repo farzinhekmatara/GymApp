@@ -171,7 +171,7 @@ namespace GymApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ApplicationUserGymClass",
+                name: "AppUserGyms",
                 columns: table => new
                 {
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -179,15 +179,15 @@ namespace GymApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApplicationUserGymClass", x => new { x.ApplicationUserId, x.GymClassId });
+                    table.PrimaryKey("PK_AppUserGyms", x => new { x.ApplicationUserId, x.GymClassId });
                     table.ForeignKey(
-                        name: "FK_ApplicationUserGymClass_AspNetUsers_ApplicationUserId",
+                        name: "FK_AppUserGyms_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ApplicationUserGymClass_GymClasses_GymClassId",
+                        name: "FK_AppUserGyms_GymClasses_GymClassId",
                         column: x => x.GymClassId,
                         principalTable: "GymClasses",
                         principalColumn: "Id",
@@ -195,8 +195,8 @@ namespace GymApp.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApplicationUserGymClass_GymClassId",
-                table: "ApplicationUserGymClass",
+                name: "IX_AppUserGyms_GymClassId",
+                table: "AppUserGyms",
                 column: "GymClassId");
 
             migrationBuilder.CreateIndex(
@@ -242,7 +242,7 @@ namespace GymApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ApplicationUserGymClass");
+                name: "AppUserGyms");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");

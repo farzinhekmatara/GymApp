@@ -7,6 +7,7 @@ namespace GymApp.Data
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<GymClass> GymClasses => Set<GymClass>();
+        public DbSet<ApplicationUserGymClass> AppUserGyms => Set<ApplicationUserGymClass>();
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

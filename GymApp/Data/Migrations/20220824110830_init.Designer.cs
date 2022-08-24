@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220824074559_init")]
+    [Migration("20220824110830_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,7 +101,7 @@ namespace GymApp.Migrations
 
                     b.HasIndex("GymClassId");
 
-                    b.ToTable("ApplicationUserGymClass");
+                    b.ToTable("AppUserGyms");
                 });
 
             modelBuilder.Entity("GymApp.Models.Entities.GymClass", b =>

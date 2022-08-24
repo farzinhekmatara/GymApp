@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GymApp.Data;
 using GymApp.Models.Entities;
@@ -28,8 +23,19 @@ namespace GymApp.Controllers
                           Problem("Entity set 'ApplicationDbContext.GymClasses'  is null.");
         }
 
-        // GET: GymClasses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> SearchPass()
+        {
+            //var pass = _context.GymClasses
+            //   .Select(item => item.Name)
+            //   .ToList();
+            //var pass = from e in _context.GymClasses select e.Name
+            //           .ToList();
+            //return View("SearchPass",pass);
+            return View("SearchPass", await _context.GymClasses.ToListAsync());
+        }
+
+            // GET: GymClasses/Details/5
+            public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.GymClasses == null)
             {
