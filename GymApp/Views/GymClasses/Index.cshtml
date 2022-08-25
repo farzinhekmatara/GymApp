@@ -10,7 +10,17 @@
            <div class="col-6  p-5"><h3><a asp-action="Create">Create New</a></h3></div>
            <div class="col-6  p-5"><h3><a asp-action="SearchPass">View Pass</a></h3></div>
        </div>
-
+       
+@if (TempData["Message"] != null)
+{
+<div class="row pt-4">
+        <div class="col-12">
+	       <div class="alert alert-primary text-center">
+	          <strong>@TempData["Message"]</strong>
+	       </div>
+        </div>
+    </div>
+}
 <table class="table">
     <thead>
         <tr>
@@ -53,7 +63,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Booking" asp-route-id="@item.Id">Booking</a>
             </td>
         </tr>
 }

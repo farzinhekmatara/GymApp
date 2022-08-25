@@ -3,46 +3,67 @@ using Microsoft.EntityFrameworkCore;
 using GymApp.Data;
 using GymApp.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace GymApp.Controllers
 {
     public class GymClassesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext db;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public GymClassesController(ApplicationDbContext context)
+        public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            db = context;
+            this.userManager = userManager;
         }
 
         // GET: GymClasses
         public async Task<IActionResult> Index()
         {
-              return _context.GymClasses != null ? 
-                          View(await _context.GymClasses.ToListAsync()) :
+              return db.GymClasses != null ? 
+                          View(await db.GymClasses.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.GymClasses'  is null.");
         }
 
         public async Task<IActionResult> SearchPass()
         {
-            //var pass = _context.GymClasses
+            //var pass = db.GymClasses
             //   .Select(item => item.Name)
             //   .ToList();
-            //var pass = from e in _context.GymClasses select e.Name
+            //var pass = from e in db.GymClasses select e.Name
             //           .ToList();
             //return View("SearchPass",pass);
-            return View("SearchPass", await _context.GymClasses.ToListAsync());
+            return View("SearchPass", await db.GymClasses.ToListAsync());
+        }
+
+        public async Task<IActionResult> Booking(int? id)
+        {
+            if (id is null) return BadRequest();
+
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = userManager.GetUserId(User);
+            if (userId == null) return BadRequest();
+            var attending = await db.AppUserGyms.FindAsync(userId, id);
+            if (attending == null)
+            {
+                var booking = new ApplicationUserGymClass{ApplicationUserId = userId, GymClassId = (int)id};
+                db.AppUserGyms.Add(booking);
+            }
+            await db.SaveChangesAsync();
+            TempData["Message"] = "Done ";
+            return RedirectToAction("Index");
         }
 
             // GET: GymClasses/Details/5
             public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.GymClasses == null)
+            if (id == null || db.GymClasses == null)
             {
                 return NotFound();
             }
 
-            var gymClass = await _context.GymClasses
+            var gymClass = await db.GymClasses
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (gymClass == null)
             {
@@ -67,8 +88,8 @@ namespace GymApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(gymClass);
-                await _context.SaveChangesAsync();
+                db.Add(gymClass);
+                await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(gymClass);
@@ -77,12 +98,12 @@ namespace GymApp.Controllers
         // GET: GymClasses/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.GymClasses == null)
+            if (id == null || db.GymClasses == null)
             {
                 return NotFound();
             }
 
-            var gymClass = await _context.GymClasses.FindAsync(id);
+            var gymClass = await db.GymClasses.FindAsync(id);
             if (gymClass == null)
             {
                 return NotFound();
@@ -106,8 +127,8 @@ namespace GymApp.Controllers
             {
                 try
                 {
-                    _context.Update(gymClass);
-                    await _context.SaveChangesAsync();
+                    db.Update(gymClass);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -129,12 +150,12 @@ namespace GymApp.Controllers
         // GET: GymClasses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.GymClasses == null)
+            if (id == null || db.GymClasses == null)
             {
                 return NotFound();
             }
 
-            var gymClass = await _context.GymClasses
+            var gymClass = await db.GymClasses
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (gymClass == null)
             {
@@ -150,23 +171,23 @@ namespace GymApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.GymClasses == null)
+            if (db.GymClasses == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.GymClasses'  is null.");
             }
-            var gymClass = await _context.GymClasses.FindAsync(id);
+            var gymClass = await db.GymClasses.FindAsync(id);
             if (gymClass != null)
             {
-                _context.GymClasses.Remove(gymClass);
+                db.GymClasses.Remove(gymClass);
             }
             
-            await _context.SaveChangesAsync();
+            await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool GymClassExists(int id)
         {
-          return (_context.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (db.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
