@@ -49,9 +49,11 @@ namespace GymApp.Controllers
             {
                 var booking = new ApplicationUserGymClass{ApplicationUserId = userId, GymClassId = (int)id};
                 db.AppUserGyms.Add(booking);
+                TempData["Message"] = "Done ";
             }
             await db.SaveChangesAsync();
-            TempData["Message"] = "Done ";
+            if (attending != null)
+                TempData["Message"] = "You are in the list already";
             return RedirectToAction("Index");
         }
 
