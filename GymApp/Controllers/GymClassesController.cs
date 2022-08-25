@@ -55,6 +55,8 @@ namespace GymApp.Controllers
             return RedirectToAction("Index");
         }
 
+
+
             // GET: GymClasses/Details/5
             public async Task<IActionResult> Details(int? id)
         {
