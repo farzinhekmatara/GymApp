@@ -36,7 +36,7 @@ namespace GymApp.Controllers
             //return View("SearchPass",pass);
             return View("SearchPass", await db.GymClasses.ToListAsync());
         }
-
+        [Authorize]
         public async Task<IActionResult> Booking(int? id)
         {
             if (id is null) return BadRequest();
