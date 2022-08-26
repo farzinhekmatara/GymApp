@@ -33,13 +33,11 @@ namespace GymApp.Controllers
             //var pass = db.GymClasses
             //   .Select(item => item.Name)
             //   .ToList();
-            //var pass = from e in db.GymClasses select e.Name
-            //           .ToList();
-            //return View("SearchPass",pass);
             return View("ItemInList", await db.GymClasses.ToListAsync());
         }
 
-        [Authorize]public async Task<IActionResult> GoToMyList()
+        [Authorize]
+        public async Task<IActionResult> GoToMyList()
         {
             var gymClasses = await db.GymClasses.Include(g => g.AttendingMembers) //Include Not required
                                           .Select(g => new GymClassViewModel
@@ -53,7 +51,6 @@ namespace GymApp.Controllers
                                           .ToListAsync();
             //var pass = from e in db.GymClasses select e.Name
             //           .ToList();
-            //return View("SearchPass",pass);
             return View("MyAttendingList", gymClasses);
         }
         [Authorize]
