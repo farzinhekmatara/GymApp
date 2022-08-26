@@ -4,6 +4,7 @@ using GymApp.Data;
 using GymApp.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using GymApp.Models;
 
 namespace GymApp.Controllers
 {
@@ -21,12 +22,13 @@ namespace GymApp.Controllers
         // GET: GymClasses
         public async Task<IActionResult> Index()
         {
-              return db.GymClasses != null ? 
+
+            return db.GymClasses != null ?
                           View(await db.GymClasses.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.GymClasses'  is null.");
         }
 
-        public async Task<IActionResult> SearchPass()
+        public async Task<IActionResult> SearchItemInList()
         {
             //var pass = db.GymClasses
             //   .Select(item => item.Name)
@@ -34,7 +36,25 @@ namespace GymApp.Controllers
             //var pass = from e in db.GymClasses select e.Name
             //           .ToList();
             //return View("SearchPass",pass);
-            return View("SearchPass", await db.GymClasses.ToListAsync());
+            return View("ItemInList", await db.GymClasses.ToListAsync());
+        }
+
+        [Authorize]public async Task<IActionResult> GoToMyList()
+        {
+            var gymClasses = await db.GymClasses.Include(g => g.AttendingMembers) //Include Not required
+                                          .Select(g => new GymClassViewModel
+                                          {
+                                              Id = g.Id,
+                                              Name = g.Name,
+                                              Duration = g.Duration,
+                                              StartDate = g.StartDate,
+                                              Attending = g.AttendingMembers.Any(a => a.ApplicationUserId == userManager.GetUserId(User))
+                                          })
+                                          .ToListAsync();
+            //var pass = from e in db.GymClasses select e.Name
+            //           .ToList();
+            //return View("SearchPass",pass);
+            return View("MyAttendingList", gymClasses);
         }
         [Authorize]
         public async Task<IActionResult> Booking(int? id)

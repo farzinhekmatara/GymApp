@@ -1,10 +1,6 @@
-﻿@model IEnumerable<GymApp.Models.Entities.GymClass>
+﻿@model IEnumerable<GymApp.Models.GymClassViewModel>
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
+     <h1>Index</h1>
 
       <div class="row">
            <div class="col-4  p-5"><h3><a asp-action="Create">Create</a></h3></div>
@@ -38,7 +34,7 @@
                 @Html.DisplayNameFor(model => model.Duration)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Attending)
             </th>
             <th></th>
         </tr>
@@ -59,13 +55,9 @@
                 @Html.DisplayFor(modelItem => item.Duration)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.Attending)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Booking" asp-route-id="@item.Id">Booking</a>
-            </td>
+           
         </tr>
 }
     </tbody>
